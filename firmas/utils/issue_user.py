@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from cryptography import x509
 from cryptography.x509.oid import NameOID, ExtendedKeyUsageOID
 from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.asymmetric import rsa, ec
 from cryptography.hazmat.backends import default_backend
 
 CA_CERT_PATH = './certs/root/cert.pem'
@@ -25,7 +25,8 @@ def issue_user_cert(username: str, email: str):
     os.makedirs(user_dir, exist_ok=True)
 
     # Generate user private key
-    user_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    # user_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    user_key = ec.generate_private_key(ec.SECP384R1())
     with open(os.path.join(user_dir, 'private_key.pem'), 'wb') as f:
         f.write(user_key.private_bytes(
             encoding=serialization.Encoding.PEM,
@@ -60,14 +61,14 @@ def issue_user_cert(username: str, email: str):
     ).add_extension(
         x509.KeyUsage(
             digital_signature=True,
-            key_encipherment=True,
-            content_commitment=True,
+            content_commitment=True,  # Non-repudiation
+            key_encipherment=False,   # usually False for EC
             data_encipherment=False,
             key_agreement=False,
             key_cert_sign=False,
             crl_sign=False,
             encipher_only=False,
-            decipher_only=False,
+            decipher_only=False
         ), critical=True
     ).add_extension(
         x509.ExtendedKeyUsage([
