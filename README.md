@@ -6,6 +6,10 @@
 
 <p align = "justify"> Morfosis es una plataforma para la gestión segura de documentos de la organización a través de firmas digitales y otras herramientas criptográficas. Se ejecuta principalmmente a través de Microsoft Power Apps, apoyada de otras herramientas como Azure SQL, Azure Functions, Blob Storage y Power Automate. </p>
 
+## Índice
+
+- [Azure Functions](Source/AzureFunctions/README.md)
+- Firmas Digitales
 
 ## Créditos
 
