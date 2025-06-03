@@ -54,7 +54,7 @@ async def sign_pdf(pdf_path: str, email: str):
     writer.write(output_stream)
     output_stream.seek(0)
 
-    w = IncrementalPdfFileWriter(io.BytesIO(output_stream.getvalue()))
+    w = IncrementalPdfFileWriter(io.BytesIO(output_stream.getvalue()), strict = False)
 
     # Add visible signature field (bottom-right corner box)
 

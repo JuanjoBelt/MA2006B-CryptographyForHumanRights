@@ -44,7 +44,9 @@ async def sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path):
     fields.append_signature_field(
         w,
         sig_field_spec=fields.SigFieldSpec(
-            'Signature', box=(0, 0, 8.27 * 72, 11.7 * 12)
+            sig_field_name="Signature",
+            on_page=len(reader.pages),
+            box=(0, 0, 8.27 * 72, 11.7 * 12)
         )
     )
 
