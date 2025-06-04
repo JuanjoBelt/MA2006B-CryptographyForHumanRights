@@ -13,4 +13,4 @@
 
 ## Créditos
 
-<p align = "justify"> Desarrollada por Kevin Martínez, Mateo Zepeda, Raúl Correa, Julio Jaramillo y Juan José H. Beltrán en el Instituto Tecnológico y de Estudios Superiores de Monterrey.</p>
+<p align = "justify"> Desarrollada por Kevin Martínez, Mateo Zepeda, Raúl Correa, Julio Jaramillo y Juan José H. Beltrán en el Instituto Tecnológico y de Estudios Superiores de Monterrey. Uso de Álgebras Modernas para Criptografía y Seguridad.</p>
