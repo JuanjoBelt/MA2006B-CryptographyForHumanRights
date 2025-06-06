@@ -1,0 +1,16 @@
+# DO NOT include azure-functions-worker in this file
+# The Python Worker is managed by Azure Functions platform
+# Manually managing azure-functions-worker may cause unexpected issues
+
+azure-functions
+asyncio
+pyhanko
+pyHanko[opentype]
+uharfbuzz
+azure-storage-blob
+datetime
+requests
+qrcode
+pyodbc
+PyPDF2
+dotenv

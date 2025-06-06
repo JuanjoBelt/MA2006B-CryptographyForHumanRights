@@ -1,9 +1,0 @@
-{
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "Server=tcp:casa-monarca-database.database.windows.net,1433;Initial Catalog=DatosMonarca;Persist Security Info=False;User ID=KevinMartrin;Password=Kevin1324;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
-    "FUNCTIONS_WORKER_RUNTIME": "python",
-    "Sql_Trigger_MaxBatchSize": 10,
-    "WEBSITE_SITE_NAME": "demo_GenKeyCert"
-  }
-}
