@@ -99,9 +99,14 @@ def docSigner(todo: str, nuevaFila: func.Out[func.SqlRow]):
                 logging.error("ERROR: No se encontraron resultados para la consulta en docs_firmados.")
                 return
             
-            usuario_nombre = datos_usuario[1]
-            usuario_cert = datos_usuario[-2]
-            usuario_key = datos_usuario[-3]
+            try: usuario_nombre = datos_usuario[1] + " " + datos_usuario[2] + " " + datos_usuario[3]
+            except:
+                logging.error("ERROR: Los nombres/apellidos del usuario están incompletos.")
+                return
+
+            # !!!!!!!!!! HARDCODE DEL ÍNDICE DE LOS DATOS DE LA TABLA DE USUARIOS !!!!!!!!!!!!
+            usuario_cert = datos_usuario[-3]
+            usuario_key = datos_usuario[-4]
             # Comprobar que los datos estén completos
             if usuario_nombre == None or usuario_cert == None or usuario_key == None:
                 logging.error("Los datos del usuario están incompletos en la tabla Usuarios.")
@@ -161,6 +166,27 @@ def docSigner(todo: str, nuevaFila: func.Out[func.SqlRow]):
                         query_text = f"UPDATE [dbo].[flujos] SET fecha_final = '{fecha_hoy}' WHERE flujo_id = {flujo_id}"
                         sqlQuery.Update(query_text)
                         logging.info('El flujo actual se marcó como corrupto.')
+
+                        # Mandar la notificación de que se corrompió el flujo...
+                        # Saber quién es el creador del flujo
+                        query_text = f"SELECT * FROM flujos WHERE flujo_id = {flujo_id};"
+                        datos_flujo = sqlQuery.Query(query_text)[0]
+                        flujo_creador = datos_flujo[2]
+
+                        # Poner hacer la solicitud de notificación
+                        query_text = f"INSERT INTO [dbo].[notificaciones] (tipo_notificacion, destinatario_id, flujo_id) VALUES (4, {flujo_creador}, {flujo_id});"
+                        sqlQuery.Update(query_text)
+                        logging.info('Se agregó la notificación de flujo corrompido para el creador del flujo.')
+
+                        # Notificar a todos los administradores...
+                        query_text = f"SELECT * FROM Usuarios WHERE nivel_id = 4;"
+                        datos_administradores = sqlQuery.Query(query_text)
+                        for administrador in datos_administradores:
+                            admin_user_id = administrador[0]
+                            query_text = f"INSERT INTO [dbo].[notificaciones] (tipo_notificacion, destinatario_id, flujo_id) VALUES (4, {admin_user_id}, {flujo_id});"
+                            sqlQuery.Update(query_text)
+                        logging.info('Se agregó la notificación de flujo corrompido para todos los administradores.')
+
                     except:
                         logging.error("ERROR: Ocurrio un error al actualizar el estatus del flujo (Corrompido).")
                     return
@@ -171,7 +197,11 @@ def docSigner(todo: str, nuevaFila: func.Out[func.SqlRow]):
             # Definir el nombre del archivo firmado
             new_name = orig_rutaDeAcceso.split("/")[-1][:-4] + f"_{firmante_id}.pdf"
 
-            signPDF.sign_pdf(path_raw_doc, signed_pdf_path, key_path, cert_path)
+            signPDF.sign_pdf(path_raw_doc,
+                             signed_pdf_path,
+                             key_path,
+                             cert_path,
+                             signed_files_path + "/" + new_name)
             #signPDF.sign_pdf(path_raw_doc, signed_pdf_path, usuario_key, usuario_cert)
             logging.info('Raw file signed successfully.')
             managePDF.upload_pdf(signed_pdf_path, new_name, signed_files_path)
@@ -187,6 +217,7 @@ def docSigner(todo: str, nuevaFila: func.Out[func.SqlRow]):
                     logging.info("Se marcó el último eslabón como inactivo.")
                 nuevaFila.set(new_row)
                 logging.info('Path updated successfully.')
+
             except:
                 logging.error("ERROR: Ocurrió un error al actualizar el path del documento firmado.")
                 return
@@ -203,9 +234,27 @@ def docSigner(todo: str, nuevaFila: func.Out[func.SqlRow]):
                     query_text = f"UPDATE [dbo].[flujos] SET fecha_final = '{fecha_hoy}' WHERE flujo_id = {flujo_id}"
                     sqlQuery.Update(query_text)
                     logging.info("El flujo se marcó exitosamente como completo.")
+
+                    # Mandar la notificación de que se completó el flujo...
+                    # Saber quién es el creador del flujo
+                    query_text = f"SELECT * FROM flujos WHERE flujo_id = {flujo_id};"
+                    datos_flujo = sqlQuery.Query(query_text)[0]
+                    flujo_creador = datos_flujo[2]
+
+
+                    query_text = f"INSERT INTO [dbo].[notificaciones] (tipo_notificacion, destinatario_id, flujo_id) VALUES (2, {flujo_creador}, {flujo_id});"
+                    sqlQuery.Update(query_text)
+                    logging.info('Se agregó la notificación para el siguiente firmante a la queue.')
                 except:
                     logging.error("ERROR: No se pudo actualizar el estatus del flujo (Commpletado).")
                     return
+            
+            # Si aún hay alguien a quien que falte de firmar...
+            else:
+                siguiente_firmante = row["siguiente_id"]
+                query_text = f"INSERT INTO [dbo].[notificaciones] (tipo_notificacion, destinatario_id, flujo_id) VALUES (1, {siguiente_firmante}, {flujo_id});"
+                sqlQuery.Update(query_text)
+                logging.info('Se agregó la notificación para el siguiente firmante a la queue.')
 
         else:
             logging.info("Esta fila no debe ser atendida por esta función.")

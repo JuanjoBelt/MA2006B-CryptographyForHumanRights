@@ -6,6 +6,7 @@ azure-functions
 asyncio
 pyhanko
 pyHanko[opentype]
+pyHanko[image-support]
 uharfbuzz
 azure-storage-blob
 datetime

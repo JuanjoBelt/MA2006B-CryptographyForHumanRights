@@ -27,22 +27,43 @@ try:
 except:
     logging.error("ERROR: Ocurrió un error al establecer conexión con la base de datos.")
 
+
+def startConnection():
+    try:
+        #Crear la conexión
+        connection = pyodbc.connect(
+            f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password}')
+        #Acceder a la base
+        cursor = connection.cursor()
+    except:
+        logging.error("ERROR: Ocurrió un error al establecer conexión con la base de datos.")
+
+
+
+def turnOff():
+    #Cerrar el cursor y la conexión
+    cursor.close()
+    connection.close()
+
 # —————————————————————————————————————————————————————————————————————————— 
 #                            Hacer una Consulta
 # ——————————————————————————————————————————————————————————————————————————
 def Query(query):
+    startConnection()
     try:
         cursor.execute(query)
         rows = cursor.fetchall()
         return rows
-    except:
-        logging.error("ERROR: Ocurrió un error al realizar la consulta.")
+    except Exception as _error:
+        logging.error(f"ERROR: Ocurrió un error al realizar la consulta. {_error=}")
         return
+    turnOff()
     
 # —————————————————————————————————————————————————————————————————————————— 
 #                           Actualizar una tabla
 # ——————————————————————————————————————————————————————————————————————————
 def Update(query):
+    startConnection()
     try:
         cursor.execute(query)
         connection.commit()
@@ -50,9 +71,5 @@ def Update(query):
     except:
         logging.error("ERROR: Ocurrió un error al actualizar la tabla.")
         return
+    turnOff()
     
-
-def turnOff():
-    #Cerrar el cursor y la conexión
-    cursor.close()
-    connection.close()

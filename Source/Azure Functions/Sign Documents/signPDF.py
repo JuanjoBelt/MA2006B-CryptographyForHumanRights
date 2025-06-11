@@ -6,15 +6,17 @@ from PyPDF2 import PdfReader, PdfWriter
 import io
 import asyncio
 from pyhanko import stamp
-from pyhanko.pdf_utils import text
+from pyhanko.pdf_utils import text, images
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
 from pyhanko.sign import fields, signers
+
+root_url = "https://docs4monarca.blob.core.windows.net/"
 
 # —————————————————————————————————————————————————————————————————————————— 
 #                           Función de Firmado
 # ——————————————————————————————————————————————————————————————————————————
 
-async def sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path):
+async def sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path, online_pdf_path):
     #print(f"Signing {pdf_name}...")
 
        # Load the CMS signer
@@ -60,7 +62,8 @@ async def sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path):
             font_size=18,
             border_width=0
         ),
-        border_width = 0
+        border_width = 0,
+        background = images.PdfImage('img/morfosisBackground.png')
     )
 
     pdf_signer = signers.PdfSigner(
@@ -74,11 +77,11 @@ async def sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path):
         await pdf_signer.async_sign_pdf(
             w,
             output=outf,
-            appearance_text_params={'url': 'https://github.com/JuanjoBelt/MA2006B-CryptographyForHumanRights'}
+            appearance_text_params={'url': root_url + online_pdf_path}
         )
 
     print("Done signing.")
 
 # Execute the async function
-def sign_pdf(pdf_path, signed_pdf_path, key_path, cert_path):
-    asyncio.run(sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path))
+def sign_pdf(pdf_path, signed_pdf_path, key_path, cert_path, online_pdf_path):
+    asyncio.run(sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path, online_pdf_path))
