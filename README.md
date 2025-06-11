@@ -8,7 +8,7 @@
 
 ## Índice
 
-- [Azure Functions](<Source/Azure Functions/README.md>)
+- [Azure Functions](<Source/Azure Functions>)
 - Firmas Digitales
 
 ## Anexos
