@@ -1,40 +1,25 @@
+# —————————————————————————————————————————————————————————————————————————— 
+#                                Librerías
+# ——————————————————————————————————————————————————————————————————————————
 from PyPDF2 import PdfReader, PdfWriter
 import io
-import os
-import sys
 import asyncio
 from pyhanko import stamp
 from pyhanko.pdf_utils import text
 from pyhanko.pdf_utils.incremental_writer import IncrementalPdfFileWriter
 from pyhanko.sign import fields, signers
 
-USERS_DIR = './certs/users/'
+# —————————————————————————————————————————————————————————————————————————— 
+#                           Función de Firmado
+# ——————————————————————————————————————————————————————————————————————————
 
-def find_user_dir_by_email(email: str) -> str:
-    """Return user dir path from email lookup in users/."""
-    CERT_PATH = f"{USERS_DIR}/{email}/cert.pem"
-    print(f"Checking {CERT_PATH} for email {email}...")
-    if not os.path.exists(CERT_PATH):
-        raise FileNotFoundError(f"Certificate for {email} not found in {USERS_DIR}.")
-    return os.path.dirname(CERT_PATH)
-
-async def sign_pdf(pdf_path: str, email: str):
-    if not os.path.exists(pdf_path):
-        raise FileNotFoundError(f"{pdf_path} does not exist.")
-
-    pdf_name = os.path.basename(pdf_path)
-    signed_pdf_path = f'./signed_files/{pdf_name}'
-
-    user_dir = find_user_dir_by_email(email)
-    cert_path = os.path.join(user_dir, 'cert.pem')
-    key_path = os.path.join(user_dir, 'private_key.pem')
-
-    print(f"Signing {pdf_name} with certificate of {email}...")
+async def sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path):
+    #print(f"Signing {pdf_name}...")
 
     # Load the CMS signer
     cms_signer = signers.SimpleSigner.load(
         key_path, cert_path,
-        ca_chain_files=(cert_path,),  # Assuming no intermediate chain
+        ca_chain_files=(cert_path,),  # self-signed
         key_passphrase=None
     )
 
@@ -46,7 +31,6 @@ async def sign_pdf(pdf_path: str, email: str):
     for page_num in range(len(reader.pages)):
         writer.add_page(reader.pages[page_num])
 
-    # Add a new blank page
     writer.add_blank_page(width=8.27 * 72, height=11.7 * 12)
 
     # Save the modified PDF
@@ -54,10 +38,9 @@ async def sign_pdf(pdf_path: str, email: str):
     writer.write(output_stream)
     output_stream.seek(0)
 
-    w = IncrementalPdfFileWriter(io.BytesIO(output_stream.getvalue()), strict = False)
+    w = IncrementalPdfFileWriter(io.BytesIO(output_stream.getvalue()), strict=False)
 
-    # Add visible signature field (bottom-right corner box)
-
+    # Add the visible signature field
     fields.append_signature_field(
         w,
         sig_field_spec=fields.SigFieldSpec(
@@ -66,7 +49,8 @@ async def sign_pdf(pdf_path: str, email: str):
             box=(0, 0, 8.27 * 72, 11.7 * 12)
         )
     )
-    
+
+    # Define metadata and QR-stamp signer
     meta = signers.PdfSignatureMetadata(field_name='Signature')
     qr_style = stamp.QRStampStyle(
         stamp_text='Signed by: %(signer)s\nTime: %(ts)s\nURL: %(url)s',
@@ -91,15 +75,8 @@ async def sign_pdf(pdf_path: str, email: str):
             appearance_text_params={'url': 'https://github.com/Racoo203'}
         )
 
-    # print("Done signing.")
-    print(f"Done. Signed file: {signed_pdf_path}")
+    print("Done signing.")
 
-if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        print("Usage: python sign.py <pdf_path> <email>")
-        sys.exit(1)
-
-    pdf_path = sys.argv[1]
-    email = sys.argv[2]
-
-    asyncio.run(sign_pdf(pdf_path, email))
+# Execute the async function
+def sign_pdf(pdf_path, signed_pdf_path, key_path, cert_path):
+    asyncio.run(sign_pdf_async(pdf_path, signed_pdf_path, key_path, cert_path))
