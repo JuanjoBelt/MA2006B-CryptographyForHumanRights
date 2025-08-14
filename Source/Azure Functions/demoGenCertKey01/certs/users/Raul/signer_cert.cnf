@@ -1,6 +1,0 @@
-[ v3_user ]
-basicConstraints = CA:FALSE
-keyUsage = critical, digitalSignature, nonRepudiation
-extendedKeyUsage = emailProtection
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid,issuer
