@@ -12,6 +12,9 @@
 - [Azure Functions](<Source/Azure Functions>)
 - [Códigos para Manipular Digitales](<Source/Firmas Digitales>)
 
+## Manual de Usuario
+- [Creación de Rutas](<Source/ManualUsuario/CreacionDeRutas.md>)
+
 ## Anexos
 
 - [Identidad de marca en Canva](https://www.canva.com/design/DAGl3v2xfwI/h7wrStEaMG3fJL4RF-ca6g/edit?utm_content=DAGl3v2xfwI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
