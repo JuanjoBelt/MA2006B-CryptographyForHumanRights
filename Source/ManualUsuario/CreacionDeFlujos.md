@@ -7,4 +7,8 @@ Un detalle a considerar es que **el archivo ingresado únicamente puede ser de t
 Para crear un flujo se siguen los siguientes pasos:
 1. Ir a la pantalla de creación de flujos.
 2. Escribir el nombre del flujo y el área principal de la que forma parte.
-3. Seleccionar el documento que se desea firmar. Debido a limitaciones de PowerApp, el selector de archivos muestra inicialmente sólo archivos de tipo imagen, por lo que para seleccionar archivos
+3. Seleccionar el documento que se desea firmar. Debido a limitaciones de PowerApp, el selector de archivos muestra inicialmente sólo archivos de tipo imagen, por lo que para seleccionar archivos .pdf es necesario cambiar el formato a "todos los archivos".
+4. Seleccionar la ruta que se desea que siga el documento. Al seleccionar una ruta, los firmantes aparecerán a la derecha. El orden que seguirá el documento es de arriba a abajo.
+
+### Autofirmado
+Existe una ruta predeterminada llamada Autofirmado, la cual permite firmar el documento con la firma de la cuenta ingresada. Es posible acceder al documento firmado desde el historial.
