@@ -14,6 +14,7 @@
 
 ## Manual de Usuario
 - [Creación de Rutas](<Source/ManualUsuario/CreacionDeRutas.md>)
+- [Creación de Flujos](<Source/ManualUsuario/CreacionDeFlujos.md>)
 
 ## Anexos
 
