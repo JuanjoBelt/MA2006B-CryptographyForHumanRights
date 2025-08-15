@@ -6,7 +6,7 @@ Para firmar o rechazar un documento se siguen los siguientes pasos:
 1. Desde la página de inicio, dar click en la flecha del documento pendiente que se desea firmar.
 
 <p align = "center">
-    <img src="./Imagenes/firmar_1.png" height="250">
+    <img src="./Imagenes/firmar_1.png" height="150">
 <p>
   
 3. Una vez en la página de firmado, dar click en firmar o rechazar documento.
