@@ -21,3 +21,6 @@ Para crear una ruta se siguen los siguientes pasos:
 <p align = "center">
     <img src="./Imagenes/creacion_flujo_3.png" height="150">
 <p>
+
+### Autofirmado
+La ruta especial en donde el único firmante es el usuario ingresado ya está creada, aparece como "Autofirmado".
