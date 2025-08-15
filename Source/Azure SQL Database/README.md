@@ -4,7 +4,9 @@ Mórfosis utiliza una gran cantidad de datos estructurados, tanto para la creaci
 
 Se muestra el diagrama de tablas relacionales de la base de datos:
 
-
+<p align = "center">
+    <img src="SQLDiagram.png" height="500">
+<p>
 
 La mayoría de las tablas y sus respectivas columnas son lo suficientemente autoexplicativas. No obstante, existen algunas tablas especiales cuyo funcionamiento se explica a continuación:
 
