@@ -11,10 +11,12 @@
 - [Paquete de Power Apps](<Source/Power App Source>)
 - [Azure Functions](<Source/Azure Functions>)
 - [Códigos para Manipular Digitales](<Source/Firmas Digitales>)
+- [Habilitar Notificaciones en Telegram](<Source/NotificacionTelegram.pdf>)
 
 ## Manual de Usuario
 - [Creación de Rutas](<Source/ManualUsuario/CreacionDeRutas.md>)
 - [Creación de Flujos](<Source/ManualUsuario/CreacionDeFlujos.md>)
+- [Firmar Documentos](<Source/ManualUsuario/FirmarDocumento.md>)
 
 ## Anexos
 
